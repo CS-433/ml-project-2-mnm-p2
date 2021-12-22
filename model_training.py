@@ -20,6 +20,7 @@ import random
 from PIL import Image
 import re
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def load_images(img_folder,gt_folder,quantity,all = False):
     """load 'quantity images to 2 numpy array. satelite images and groundtruth images'"""
