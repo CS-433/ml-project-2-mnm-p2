@@ -11,7 +11,9 @@ Evaluation Metric: [F1 score](https://en.wikipedia.org/wiki/F-score)
 
 ## How to reproduce our best submission
 
-Follow the steps in Environment Setup to setup
+Follow the steps in Environment Setup to be able to run the code.
+
+Then just execute run.py
 
 ## Environment Setup
 
