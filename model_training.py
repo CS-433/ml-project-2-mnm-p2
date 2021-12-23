@@ -415,7 +415,7 @@ def write_prediction(model,timg,preprocess_input,aux_loss = True):
       Image.fromarray(a[0,:,:,0].astype(np.uint8)).save(PREDICTION_DIR + "prediction_0" + str(i+1) + ".png")
 
 
-"""
+""" Example usage:
 pipeline nicky for training best model:
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 train_set = DataLoaderSegmentation(folder_path = NEW_DATA_FOLDER + 'TRAIN/AUGMENTED/',images_folder = 'images',label_folder = 'labels')

@@ -13,7 +13,7 @@ Evaluation Metric: [F1 score](https://en.wikipedia.org/wiki/F-score)
 
 Follow the steps in Environment Setup to be able to run the code.
 
-Then just execute run.py
+Then just execute run.py with a correct mode argument (see below).
 
 ### Environment Setup
 

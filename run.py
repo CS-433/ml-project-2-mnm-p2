@@ -57,7 +57,7 @@ def run_model_training():
 
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'max',patience = 4,threshold= 0.0001,threshold_mode = 'abs',verbose = True,factor=0.5 )
     train_loss,val_loss , _ , _ = train_model(model,train_set,test_set,optimizer,criterion,scheduler,
-                                            MODELS_FOLDER + 'best_model.zip',preprocess_input,preprocess_label_basic_unet,alpha = alpha,betha = betha,mini_batch_size = 10,nb_epochs = 100, criterion2 = criterion2,
+                                            MODELS_FOLDER + 'best_model_alpha05.zip',preprocess_input,preprocess_label_basic_unet,alpha = alpha,betha = betha,mini_batch_size = 10,nb_epochs = 100, criterion2 = criterion2,
                                             use_scheduler = True, print_progress= True,aux_loss = True)
 
 
@@ -69,7 +69,7 @@ def run_predict_test():
 
     #NOTE TO USER: IF YOU HAVE TRAINED YOUR MODEL, replace the final argument of this function by 'models/best_model.zip'
                 #  otherwise just use the model we trained ('models/best_model_alpha05.zip')!
-    predict_with_best_model(RAW_TEST_DATA_FOLDER, RAW_TEST_PREDICTIONS_FOLDER, 'models/best_model_alpha05.zip')
+    predict_with_best_model(RAW_TEST_DATA_FOLDER, RAW_TEST_PREDICTIONS_FOLDER, MODELS_FOLDER + 'best_model_alpha05.zip')
 
 
 
@@ -88,8 +88,9 @@ def run_write_test_to_submission():
 #=============================================================================
 
 if __name__ == "__main__":
-    print(len(sys.argv))
-    print(sys.argv)
+    if len(sys.argv != 1):
+        print('Passed wrong number of arguments. run.py should be given 1 mode argument.')
+        exit(0)
 
     mode = sys.argv[1]
 
@@ -102,5 +103,5 @@ if __name__ == "__main__":
     elif mode == 'write_sub':
         run_write_test_to_submission()
     else:
-        print('Passed invalid mode argument')
+        print('Passed invalid mode argument. Valid modes are: prepro, train_model, predict_test or write_sub!')
 

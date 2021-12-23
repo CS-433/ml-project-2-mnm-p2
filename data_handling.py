@@ -207,7 +207,7 @@ def augment_data(dataset,augmented_data_folder_path,rotation = False,verticalfli
             save_image(newLbl[j],augmented_data_folder_path + 'labels/' +processes[j] + str(i) + '.png')
     return DataLoaderSegmentation(augmented_data_folder_path)
 
-"""
+""" Example usage:
 dataset = DataLoaderSegmentation(folder_path = TRAIN_FOLDER)
 train_set,test_set = dataset.split_train_test()
 newdatapath = '/content/drive/MyDrive/ML_PROJECT_2/training/NEWDATA/'
