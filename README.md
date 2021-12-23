@@ -15,7 +15,7 @@ Follow the steps in Environment Setup to be able to run the code.
 
 Then just execute run.py
 
-## Environment Setup
+### Environment Setup
 
 Run the following commands to create an appropriate python environment and install all required libraries.
 
@@ -24,4 +24,22 @@ conda create -y -n ml_roadseg python=3.9.7 scipy pandas numpy matplotlib
 conda activate ml_roadseg
 pip install Pillow
 conda install -y pytorch torchvision torchaudio -c pytorch
+```
+
+### Running the code
+
+```shell
+conda activate ml_roadseg
+
+# Runs preprocessing
+python run.py prepro
+
+# Runs model training and saves model
+python run.py train_model
+
+# Loads trained model and runs predictions on test set
+python run.py predict_test
+
+# Read predicted labels and write them to the .csv submission format
+python run.py write_sub
 ```

@@ -67,26 +67,13 @@ def load_images(img_folder,gt_folder,quantity,all = False):
 
 
 def load_test_images(img_folder):
-    """load 'quantity images to 2 numpy array. satelite images and groundtruth images'"""
-    def get_number(x):
-      return int(re.sub("[^0-9]", "", x))
-
-    #extract name of images in both folders
-    files_img = os.listdir(img_folder)
-    files_img.sort(key = get_number)
-
-    #list containing the satelite images
-    ls_img = []
-
-    #extract satelite images
-    for file in files_img:
-        print(file)
-        img_path = img_folder+file+'/'+file + '.png'
+    images = []
+    for i in range(1, 51):
+        img_path = f'data/test_set_images/test_{i}/test_{i}.png'
         img = (transform.functional.pil_to_tensor(PIL.Image.open(img_path)).type(torch.FloatTensor)/255).unsqueeze(0)
-        ls_img.append(img)
+        images.append(img)
 
-    return torch.cat(ls_img)
-
+    return torch.cat(images)
 
 def turn_gt_to_torch_float(gt):
   """Transform groundtruth images to pytorch format"""

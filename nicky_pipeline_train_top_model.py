@@ -5,8 +5,8 @@ from data_handling import *
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# TRAIN_FOLDER = ''
-BEST_MODEL_DATASET = TRAIN_FOLDER + 'BESTMODELDATA/'
+TRAIN_FOLDER = ''
+BEST_MODEL_DATASET = TRAIN_FOLDER + 'BESTMODELDATA/' # Data used for training
 
 # BEST_MODEL_PATH = '/content/drive/MyDrive/ml/results/best_model_alpha50'
 BEST_MODEL_PATH = 'models/best_model_alpha50'
@@ -14,7 +14,7 @@ BEST_MODEL_PATH = 'models/best_model_alpha50'
 #=============================================================================
 
 #Function that allows to augment the data in a customized fashion.
-dataset = DataLoaderSegmentation(folder_path = BEST_MODEL_DATASET,images_folder = 'images',label_folder = 'labels')
+dataset = DataLoaderSegmentation(root_path = BEST_MODEL_DATASET,images_folder = 'images',label_folder = 'labels')
 
 train_set,test_set = dataset.split_train_test(test_portion = 0.1)
 len(train_set),len(test_set)

@@ -26,48 +26,23 @@ import random
 test before augmenting the data. That way we make sure that our validation metric isn't biased by the fact that we have the same immages with small variation in the training. (eg. We have an image in the train, and the same image with a rotation of 1 degree on the test ...)
 """
 
-def split_train_test( self,seed = 1 ,test_portion = 0.2):
-    folder_path = self.folder_path
-
-    test_set = DataLoaderSegmentation(folder_path)
-    train_set = DataLoaderSegmentation(folder_path)
-
-    copy_img_files = self.img_files
-    copy_mask_files = self.mask_files
-
-    index_array = list(range(len(copy_img_files)))
-    random.Random(seed).shuffle(index_array)
-
-    copy_img_files =  list(map(copy_img_files.__getitem__, index_array))
-    copy_mask_files = list(map(copy_mask_files.__getitem__, index_array))
-
-    quantity_test = int(len(copy_img_files)*test_portion)
-
-    test_set.img_files = copy_img_files[:quantity_test]
-    test_set.mask_files = copy_mask_files[:quantity_test]
-
-    train_set.img_files = copy_img_files[quantity_test:]
-    train_set.mask_files = copy_mask_files[quantity_test:]
-    return train_set,test_set
-
 #Inspired by https://discuss.pytorch.org/t/dataloader-for-semantic-segmentation/48290/2
 
 #This dataloder allows to import the immages on by one, only the directories are in the RAM
 class DataLoaderSegmentation(data.Dataset):
-
-    def __init__(self, folder_path,images_folder = 'images',label_folder = 'labels',with_filter = False, filter = None):
+    def __init__(self, root_path,images_folder = 'images',label_folder = 'labels',with_filter = False, filter = None):
         """Initalize the dataloader. Instead of having all the pics in ram we only save the directories."""
         super(DataLoaderSegmentation, self).__init__()
-        self.folder_path = folder_path
+        self.folder_path = root_path
         self.currentidx = 0
-        self.img_files = glob.glob(os.path.join(folder_path,images_folder +'/','*.png'))
+        self.img_files = glob.glob(os.path.join(root_path,images_folder +'/','*.png'))
 
         if with_filter:
             self.img_files = [path for path in self.img_files if filter in path]
 
         self.mask_files = []
         for img_path in self.img_files:
-             self.mask_files.append(os.path.join(folder_path,label_folder,os.path.basename(img_path)))
+             self.mask_files.append(os.path.join(root_path,label_folder,os.path.basename(img_path)))
 
     def __getitem__(self, index):
         """Returns only the pic,label at specified index. The returned object is a torch tensor [channels,H,W]"""
@@ -102,7 +77,6 @@ class DataLoaderSegmentation(data.Dataset):
         return int(self.currentidx/len(self.img_files))
 
     def split_train_test( self,seed = 1 ,test_portion = 0.2):
-        """Split dataloader into two train and test dataloaders"""
         folder_path = self.folder_path
 
         test_set = DataLoaderSegmentation(folder_path)
@@ -114,8 +88,8 @@ class DataLoaderSegmentation(data.Dataset):
         index_array = list(range(len(copy_img_files)))
         random.Random(seed).shuffle(index_array)
 
-        copy_img_files =  list(map(copy_img_files._getitem_, index_array))
-        copy_mask_files = list(map(copy_mask_files._getitem_, index_array))
+        copy_img_files =  list(map(copy_img_files.__getitem__, index_array))
+        copy_mask_files = list(map(copy_mask_files.__getitem__, index_array))
 
         quantity_test = int(len(copy_img_files)*test_portion)
 
@@ -127,7 +101,7 @@ class DataLoaderSegmentation(data.Dataset):
         return train_set,test_set
 
 #To discuss, do we want to compose trasformations as well?
-def augment_data(dataset,rootpath,rotation = False,verticalflip =False,horizontalflip = False, toGrayScale = False, colorJitter = False,combinations = 0,p = 1,nbr_rot = 1):
+def augment_data(dataset,augmented_data_folder_path,rotation = False,verticalflip =False,horizontalflip = False, toGrayScale = False, colorJitter = False,combinations = 0,p = 1,nbr_rot = 1):
     """"Given a Dataloader and a output filepath takes all the images in the dataloader and augment them,
     then write the augmented images to the output filepath and returns the augmented dataloader"""
     #Define all the tranformers
@@ -192,16 +166,16 @@ def augment_data(dataset,rootpath,rotation = False,verticalflip =False,horizonta
         #save grayScale pics (note: only grayscaling the img and not the label)
         if toGrayScale:
             #save also original dataset pics
-            save_image(transforms.functional.to_tensor(transforms.functional.to_pil_image(img)),rootpath + '/images/'+'Original' + str(i) + '.png')
-            save_image(transforms.functional.to_tensor(transforms.functional.to_pil_image(lbl)),rootpath + 'labels/'+'Original' + str(i) + '.png')
+            save_image(transforms.functional.to_tensor(transforms.functional.to_pil_image(img)),augmented_data_folder_path + 'images/'+'Original' + str(i) + '.png')
+            save_image(transforms.functional.to_tensor(transforms.functional.to_pil_image(lbl)),augmented_data_folder_path + 'labels/'+'Original' + str(i) + '.png')
             #save grayscaled pics
-            save_image(grayScale_(img),rootpath + '/images/'+'GrayScale' + str(i) + '.png')
-            save_image(transforms.functional.to_tensor(transforms.functional.to_pil_image(lbl)),rootpath + 'labels/' +'GrayScale' + str(i) + '.png')
+            save_image(grayScale_(img),augmented_data_folder_path + 'images/'+'GrayScale' + str(i) + '.png')
+            save_image(transforms.functional.to_tensor(transforms.functional.to_pil_image(lbl)),augmented_data_folder_path + 'labels/' +'GrayScale' + str(i) + '.png')
             #Save color jittered inputs with original outputs (note: only jittering the img and not the label)
         if colorJitter:
             #Save pics
-            save_image(colorJitter_(img),rootpath + '/images/'+'ColorJitter' + str(i) + '.png')
-            save_image(transforms.functional.to_tensor(transforms.functional.to_pil_image(lbl)),rootpath + 'labels/' +'ColorJitter' + str(i) + '.png')
+            save_image(colorJitter_(img),augmented_data_folder_path + 'images/'+'ColorJitter' + str(i) + '.png')
+            save_image(transforms.functional.to_tensor(transforms.functional.to_pil_image(lbl)),augmented_data_folder_path + 'labels/' +'ColorJitter' + str(i) + '.png')
         if rotation:
             for r in range(nbr_rot):
                 #Rotations: (note: we need to rotate the img and lbl of the same angle)
@@ -213,13 +187,13 @@ def augment_data(dataset,rootpath,rotation = False,verticalflip =False,horizonta
                 newLbl = transforms.functional.to_tensor(transforms.functional.to_pil_image(lbl))
                 newLbl = transform.functional.rotate(newLbl,rand[0].item())
                 #Save pics
-                save_image(newImg,rootpath + '/images/'+'RandRot' + str(i) + 'rotNb' +str(r) + '.png')
-                save_image(newLbl,rootpath + 'labels/' +'RandRot' + str(i) + 'rotNb' +str(r) + '.png')
+                save_image(newImg,augmented_data_folder_path + 'images/'+'RandRot' + str(i) + 'rotNb' +str(r) + '.png')
+                save_image(newLbl,augmented_data_folder_path + 'labels/' +'RandRot' + str(i) + 'rotNb' +str(r) + '.png')
         if combinations != 0:
             #save combination of trasformations
             for r in range(combinations):
-                save_image(combine_img[r](img),rootpath + '/images/'+'combine'+ str(i) +'combNb' +str(r) + '.png')
-                save_image(combine_lbl[r](lbl),rootpath + 'labels/' +'combine' + str(i) +'combNb' +str(r) + '.png')
+                save_image(combine_img[r](img),augmented_data_folder_path + 'images/'+'combine'+ str(i) +'combNb' +str(r) + '.png')
+                save_image(combine_lbl[r](lbl),augmented_data_folder_path + 'labels/' +'combine' + str(i) +'combNb' +str(r) + '.png')
         #We need to perform the same trasformation to img and lbls therefore we concat them before the trasformation occurs
         seq = [img,lbl]
         concatenated = torch.cat(seq,axis = 0)
@@ -229,9 +203,9 @@ def augment_data(dataset,rootpath,rotation = False,verticalflip =False,horizonta
         newLbl = [tran[3:,:,:] for tran in trans]
         #Save pics
         for j in range(len(transformers)):
-            save_image(newImg[j],rootpath + '/images/'+processes[j] + str(i) + '.png')
-            save_image(newLbl[j],rootpath + 'labels/' +processes[j] + str(i) + '.png')
-    return DataLoaderSegmentation(rootpath)
+            save_image(newImg[j],augmented_data_folder_path + 'images/'+processes[j] + str(i) + '.png')
+            save_image(newLbl[j],augmented_data_folder_path + 'labels/' +processes[j] + str(i) + '.png')
+    return DataLoaderSegmentation(augmented_data_folder_path)
 
 """
 dataset = DataLoaderSegmentation(folder_path = TRAIN_FOLDER)

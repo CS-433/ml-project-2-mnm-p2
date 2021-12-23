@@ -1,3 +1,11 @@
+
+import torch
+from PIL import Image
+from models import *
+
+from model_training import *
+
+# Loads test_images. Then the model. Then writes to folder
 def predict_with_best_model(path_to_test_images_folder, folder_to_write_in,path_to_best_model):
     timg = load_test_images(path_to_test_images_folder)
     unet_pretrained_model = torch.hub.load('mateuszbuda/brain-segmentation-pytorch', 'unet',
