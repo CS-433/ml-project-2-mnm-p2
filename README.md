@@ -7,9 +7,10 @@ For this project task, we had to create a model to segment roads in satellite im
 
 The dataset is available in this git aswell as on the CrowdAI.
 
-Evaluation Metric: [F1 score](https://en.wikipedia.org/wiki/F-score)
-
+Our best model achieved an F1-score of 90.7\% and an accuracy of 95\%.
 Final submission: [Submission #169329](https://www.aicrowd.com/challenges/epfl-ml-road-segmentation/submissions/169329)
+
+[Our Report](ML_MMN_Project2.pdf)
 
 # How to reproduce our best submission
 
