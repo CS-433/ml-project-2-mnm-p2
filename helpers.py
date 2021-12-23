@@ -14,6 +14,7 @@ DATA_FOLDER = 'data/'
 # NICKY You could swap the line above with the comment and you could have the stuff work nicely with drive.
 # DATA_FOLDER = '/content/drive/MyDrive/ml/data'
 
+MODELS_FOLDER = 'models/'
 
 # Contains all given training data
 RAW_TRAIN_DATA_FOLDER = DATA_FOLDER + 'training/'
@@ -34,6 +35,8 @@ FINAL_DATA_FOLDER = PROCESSED_DATA_FOLDER + 'final/'
 
 
 RAW_TEST_PREDICTIONS_FOLDER = 'data/test_set_predictions/'
+
+
 
 #=============================================================================
 # Helper functions

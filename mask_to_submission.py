@@ -3,6 +3,7 @@
 import os
 import numpy as np
 import matplotlib.image as mpimg
+from helpers import *
 import re
 
 foreground_threshold = 0.25 # percentage of pixels > 1 required to assign a foreground label to a patch
@@ -37,10 +38,11 @@ def masks_to_submission(submission_filename, *image_filenames):
 
 
 if __name__ == '__main__':
-    submission_filename = 'dummy_submission.csv'
+    submission_filename = 'best_model_submission.csv'
     image_filenames = []
+    print('hi')
     for i in range(1, 51):
-        image_filename = 'training/groundtruth/satImage_' + '%.3d' % i + '.png'
+        image_filename = RAW_TEST_PREDICTIONS_FOLDER + 'prediction_' + '%.3d' % i + '.png'
         print(image_filename)
         image_filenames.append(image_filename)
     masks_to_submission(submission_filename, *image_filenames)

@@ -7,11 +7,16 @@ from model_training import *
 
 # Loads test_images. Then the model. Then writes to folder
 def predict_with_best_model(path_to_test_images_folder, folder_to_write_in,path_to_best_model):
+
     timg = load_test_images(path_to_test_images_folder)
+
+    #load pretrained unet on brain-segmentation from pytorch
     unet_pretrained_model = torch.hub.load('mateuszbuda/brain-segmentation-pytorch', 'unet',
-                                           in_channels=3, out_channels=1, init_features=32, pretrained=True)
+                                            in_channels=3, out_channels=1, init_features=32, pretrained=True)
     model = Unet_with_aux_loss_tanh(unet_pretrained_model)
-    model.load_state_dict(torch.load(path_to_best_model))
+
+    model.load_state_dict(torch.load(path_to_best_model, map_location=device))
+
     model.eval()
     mean = 0.3082
     std = 0.5541
